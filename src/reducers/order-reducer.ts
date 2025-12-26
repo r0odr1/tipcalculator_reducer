@@ -22,9 +22,22 @@ export type OrderActions =
   ) => {
 
     if(action.type === 'add-item') {
+      const itemExists = state.order.find(orderItem => orderItem.id === action.payload.item.id)
+      let order: OrderItem[] = []
+      
+      if (itemExists) {
+        order = state.order.map(orderItem => orderItem.id === action.payload.item.id ?
+          {...orderItem, quantity: orderItem.quantity + 1} :
+          orderItem
+        )
+      } else {
+        const newItem : OrderItem = {...action.payload.item, quantity: 1}
+        order = [...state.order, newItem]
+      }
 
       return {
-        ...state
+        ...state,
+        order
       }
     }
 
